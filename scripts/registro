@@ -1,0 +1,47 @@
+#! /bin/bash
+
+read -p "INGRESE EL NOMBRE DEL USUARIO A REGISTRAR: " NOM
+
+h=$(grep "$NOM" /etc/passwd | wc -l)
+
+while [ "$h" -eq 1 ]
+do
+echo "EL USUARIO $NOM YA EXISTE, INGRESE OTRO NOMBRE "
+read -p "INGRESE EL NOMBRE DEL USUARIO A REGISTRAR: " NOM
+h=$(grep "$NOM" /etc/passwd | wc -l)
+done
+echo
+echo "A QUÉ GRUPO VA A PERTENECER $NOM ?"
+echo
+echo "1) ASESOR PROFESIONAL"
+echo "2) ADMINISTRATIVO"
+echo "3) GERENTE DE SUCURSAL"
+echo "4) GERENTE GENERAL"
+echo
+read -p "OPCIÓN: " gru
+echo
+	case $gru in
+1)
+	useradd -g Asesor_Profesional -d /home/$NOM -s /bin/bash $NOM
+	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
+	;;
+2)
+	useradd -g Administrativos -d /home/$NOM -s /bin/bash $NOM
+	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
+	;;
+3)
+	useradd -g Gerentes_Sucursal -d /home/$NOM -s /bin/bash $NOM
+	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
+	;;
+4)
+	b=$(grep 1003 /etc/passwd | wc -l)
+	if [ $b -eq 1 ]; then
+	echo "YA EXISTE UN GERENTE GENERAL."
+	break
+	else
+	useradd -g Gerente_General -d /home/$NOM -s /bin/bash $NOM
+	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
+	fi
+	;;
+esac
+

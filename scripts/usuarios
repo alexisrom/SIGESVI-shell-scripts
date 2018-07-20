@@ -1,0 +1,34 @@
+#! /bin/bash
+clear
+echo QUE DESEA HACER?
+echo
+
+while :
+do
+echo
+select op in "ALTA" "BAJA" "MODIFICAR" "CONSULTAR" "SALIR";
+do
+
+	case $op in
+		"ALTA")
+			sh Registro.sh
+		;;
+		"BAJA")
+			sh Eliminar.sh
+		;;
+		"MODIFICAR")
+			sh Modificar.sh
+		;;
+		"CONSULTAR")
+			sh Consulta.sh
+		;;
+		"SALIR")
+			break
+		;;
+		*)
+echo Error de ingreso, intente de nuevo.
+		;;
+	esac
+done
+break
+done

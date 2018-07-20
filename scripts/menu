@@ -1,0 +1,26 @@
+#! /bin/bash
+clear
+
+while :
+do
+echo
+echo "========S.I.GES.VI.========"
+echo
+echo "ELIGA UNA OPCIÓN:"
+echo "1) MENÚ DE USUARIOS"
+echo "2) MENÚ DE OPERADOR DE CÓMPUTOS"
+echo "0) SALIR"
+echo
+read -p "OPCIÓN: " opc
+
+	case $opc in
+	"1")sh usuarios;;
+	"2") echo "OPCIÓN NO DISPONIBLE."
+			echo;;
+	"0")
+break
+	;;
+	*)
+echo "ERROR DE INGRESO, INGRESE DE NUEVO"
+	esac
+done

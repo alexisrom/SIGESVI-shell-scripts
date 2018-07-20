@@ -1,0 +1,29 @@
+#! /bin/bash
+
+read -p "INGRESE EL NOMBRE DEL USUARIO A ELIMINAR: " NOM
+
+m=$(grep $NOM /etc/passwd | wc -l)
+
+while [ $m -eq 0 ]
+do
+read -p "ESTE USUARIO NO EXISTE, INTENTE DE NUEVO: " NOM
+m=$(grep "$NOM" /etc/passwd | wc -l)
+done
+
+echo "SEGURO QUE QUIERE ELIMINAR A $NOM? (S/n)"
+read des
+
+if [ $des = "s" ] || [ $des = "S" ]; then
+echo
+deluser "$NOM"
+echo "EL USUARIO HA SIDO ELIMINADO CON ÉXITO!"
+
+elif [ $des = "n" ] || [ $des = "N" ]; then
+echo
+echo "EL USUARIO $NOM NO HA SIDO ELIMINADO."
+
+else
+echo
+echo "ERROR DE INGRESO."
+
+fi

@@ -1,0 +1,47 @@
+#! /bin/bash
+
+echo "¿QUÉ DESEA MODIFICAR?"
+echo
+echo "1) NOMBRE DE USUARIO"
+echo "2) NOMBRE DE GRUPO"
+echo
+read mod
+
+case $mod in
+	1)
+read -p "INGRESE EL NOMBRE DEL USUARIO A MODIFICAR: " NOM
+
+r=$(grep "$NOM" /etc/passwd | wc -l)
+
+while [ "$r" -eq 0 ]
+do
+echo
+echo "EL USUARIO INGRESADO NO EXISTE, INTÉNTELO DE NUEVO: " NOM
+r=$(grep "$NOM" /etc/passwd | wc -l)
+done
+echo
+read -p "INGRESE EL NUEVO NOMBRE DE USUARIO: " NUEVO
+echo
+usermod -l "$NUEVO" "$NOM"
+usermod -md "/home/$NUEVO" "$NUEVO"
+echo
+echo "EL NUEVO NOMBRE HA SIDO INGRESADO CON ÉXITO!"
+	;;
+	2)
+echo
+read -p "INGRESE EL NOMBRE DEL GRUPO A MODIFICAR: " GRU
+
+g=$(grep "$GRU" /etc/groups | wc -l)
+
+while [ "$g" -eq 0 ]
+do
+read -p "EL GRUPO NO EXISTE, INTÉNTE DE NUEVO: " GRU
+g=$(grep "$GRU" /etc/groups | wc -l)
+done
+
+read -p "INGRESE EL NUEVO NOMBRE DEL GRUPO: " NUE
+groupmod -n $NUE $GRU
+echo
+echo "NOMBRE DE GRUPO INGRESADO CON ÉXITO!"
+	;;
+	esac
