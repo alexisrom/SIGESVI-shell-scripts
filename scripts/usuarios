@@ -1,34 +1,25 @@
 #! /bin/bash
-clear
-echo QUE DESEA HACER?
-echo
 
+clear
 while :
 do
-echo
-select op in "ALTA" "BAJA" "MODIFICAR" "CONSULTAR" "SALIR";
-do
-
-	case $op in
-		"ALTA")
-			sh Registro.sh
-		;;
-		"BAJA")
-			sh Eliminar.sh
-		;;
-		"MODIFICAR")
-			sh Modificar.sh
-		;;
-		"CONSULTAR")
-			sh Consulta.sh
-		;;
-		"SALIR")
-			break
-		;;
-		*)
-echo Error de ingreso, intente de nuevo.
-		;;
+	echo
+	echo "======== S.I.GES.VI ========"
+	echo
+	echo "------ Menú Usuarios ------"
+	echo "1) Agregar"
+	echo "2) Eliminar"
+	echo "3) Modificar"
+	echo "4) Consultar"
+	echo "0) Volver"
+	echo
+	read -p "Ingrese una opción: " opc
+	case $opc in
+	"1") ./registro;;
+	"2") sh eliminar;;
+	"3") sh modificar;;
+	"4") sh consulta;;
+	"0") break;;
+	*) echo "Opción incorrecta, intente nuevamente";;
 	esac
-done
-break
 done

@@ -1,0 +1,10 @@
+#! /bin/bash
+
+groupdel Asesor_Profesional
+groupdel Administrativo
+groupdel Gerente_Sucursal
+groupdel Gerente_General
+groupadd Asesor_Profesional
+groupadd Administrativo
+groupadd Gerente_Sucursal
+groupadd Gerente_General

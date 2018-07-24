@@ -1,47 +1,53 @@
 #! /bin/bash
+# - Comprobar que exista el grupo antes de crear el usuario
+# - Verificar que no se pueda agregar el usuario si no existe el grupo
+# - Definir ID de grupo
+# - Asignar contraseñas a los usuarios
+grupos=("Asesor_Profesional" "Administrativo" "Gerente_Sucursal" "Gerente_General")
 
-read -p "INGRESE EL NOMBRE DEL USUARIO A REGISTRAR: " NOM
-
-h=$(grep "$NOM" /etc/passwd | wc -l)
-
-while [ "$h" -eq 1 ]
+while :
 do
-echo "EL USUARIO $NOM YA EXISTE, INGRESE OTRO NOMBRE "
-read -p "INGRESE EL NOMBRE DEL USUARIO A REGISTRAR: " NOM
-h=$(grep "$NOM" /etc/passwd | wc -l)
-done
-echo
-echo "A QUÉ GRUPO VA A PERTENECER $NOM ?"
-echo
-echo "1) ASESOR PROFESIONAL"
-echo "2) ADMINISTRATIVO"
-echo "3) GERENTE DE SUCURSAL"
-echo "4) GERENTE GENERAL"
-echo
-read -p "OPCIÓN: " gru
-echo
-	case $gru in
-1)
-	useradd -g Asesor_Profesional -d /home/$NOM -s /bin/bash $NOM
-	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
-	;;
-2)
-	useradd -g Administrativos -d /home/$NOM -s /bin/bash $NOM
-	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
-	;;
-3)
-	useradd -g Gerentes_Sucursal -d /home/$NOM -s /bin/bash $NOM
-	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
-	;;
-4)
-	b=$(grep 1003 /etc/passwd | wc -l)
-	if [ $b -eq 1 ]; then
-	echo "YA EXISTE UN GERENTE GENERAL."
-	break
-	else
-	useradd -g Gerente_General -d /home/$NOM -s /bin/bash $NOM
-	echo "$NOM HA SIDO INGRESADO CON ÉXITO!"
-	fi
-	;;
-esac
+	read -p "Nombre del nuevo usuario: " nombre
 
+	# Buscar usuario
+	usuario=$(grep "$nombre" /etc/passwd | wc -l)
+
+	# Si el usuario no existe salgo del while
+	if [ "$usuario" -eq 1 ]; then
+		echo "El usuario $nombre ya existe, ingrese otro nombre"
+	else
+		break
+	fi
+done
+
+PS3="Porfavor ingrese una opción: "
+select grupo in "${grupos[@]}"
+do
+	# Si $grupo != "" es porque se seleccionó un grupo
+	case $grupo in
+		"") echo "Ingrese un grupo válido";;
+		*) break;;
+	esac
+done
+
+# Se comprueba que sólo exista un Gerente General
+GG=0 # Por defecto se asume que no existe el GG
+if [ "$grupo" = "Gerente_General" ]; then
+	GG=$(grep 1003 /etc/passwd | wc -l)
+	if [ $GG != 0 ]; then
+		echo "Ya existe en el sistema un Gerente General"
+	fi
+fi
+
+# Si $GG = 0 entra al if
+if [ $GG ]; then
+	read -p "Se agregará el usuario $nombre al grupo $grupo. ¿Confirmar[S]?:" confirmado
+	if [ $confirmado = "S" ] || [ $confirmado = "s" ]; then
+		useradd -g $grupo -d /home/$nombre -s /bin/bash $nombre
+		if [ $? -eq 0 ]; then 
+			echo "Usuario agregado exitosamente"
+		else 
+			echo "Error al agregar el usuario, compruebe la existencia del grupo $grupo"
+		fi
+	fi
+fi
